@@ -47,12 +47,12 @@
 
 #include <map>
 #include <iostream>
-#include <QStringList>
+#include <string>
 
 struct Node {
     char NodeName;                         // 节点的名字
     std::map<Node *, int> allConnectNodes; // 联通的节点
-    bool operator <(Node *other)               // 增加比较函数，使可以使用QMap
+    bool operator <(Node *other)           // 增加比较函数，使可以使用QMap
     {
         return this->NodeName < other->NodeName;
     }
@@ -141,6 +141,11 @@ void addNode(Node *root, char name, int len)
 int getAllLen(Node *root, Node *except)
 {
     int len = 0;
+    if (root == nullptr)
+    {
+        return len;
+    }
+
     auto node = root->allConnectNodes.begin();
     while (node != root->allConnectNodes.end())
     {
@@ -158,46 +163,65 @@ int getAllLen(Node *root, Node *except)
 
 int getNodeCount(Node *root, Node *except)
 {
-    int len = 0;
+    int count = 0;
+    if (root == nullptr)
+    {
+        return count;
+    }
+
     auto node = root->allConnectNodes.begin();
     while (node != root->allConnectNodes.end())
     {
         auto tmp = node->first;
         if (tmp != except)
         {
-            len++;
-            len += getNodeCount(tmp, root);
+            count++;
+            count += getNodeCount(tmp, root);
         }
         ++node;
     }
 
-    return len;
+    return count;
 }
 
-void parse(Node **root, const QString &line)
+void parse(Node **root, const char *line)
 {
     // 这里没判断传进来的字符串是不是有效的，调用者自己保证
-    QStringList all = line.split(' ', QString::SkipEmptyParts);
+    const char *split = " ";
+    char *copy = strdup(line);
+    char *str = strtok(copy, split);
+    char *all[27 * 2] = {0};
+    char **p = all;
+    while( str != NULL )
+    {
+        *p = str;
+        ++p;
+
+        str = strtok(NULL,split);
+    }
+
     Node *parent = nullptr;
     if (*root == nullptr)
     {
-        *root = createNode(nullptr, all.first().at(0).toLatin1(), 0);
+        *root = createNode(nullptr, all[0][0], 0);
         parent = *root;
     }
     else
     {
-        parent = findNode(*root, all.first().at(0).toLatin1(), nullptr, nullptr, nullptr);
+        parent = findNode(*root, all[0][0], nullptr, nullptr, nullptr);
     }
 
-    for (int i = 2; i < all.size(); i+=2)
+    for (int i = 2; all[i] != nullptr; i+=2)
     {
-        QChar name = all.at(i).at(0);
-        int len = all.at(i + 1).toInt();
-        addNode(parent, name.toLatin1(), len);
+        char name = all[i][0];     // 确保是字母
+        int len = atoi(all[i+1]);  // 确保是数字
+        addNode(parent, name, len);
     }
+
+    delete copy;
 }
 
-int main(int argc, char *argv[])
+int main(int, char *[])
 {
     Node *root = nullptr;
     parse(&root, "A 2 B 12 I 25");
