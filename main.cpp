@@ -211,11 +211,15 @@ void parse(Node **root, const char *line)
         parent = findNode(*root, all[0][0], nullptr, nullptr, nullptr);
     }
 
-    for (int i = 2; all[i] != nullptr; i+=2)
+    // 确保找到父节点
+    if (parent != nullptr)
     {
-        char name = all[i][0];     // 确保是字母
-        int len = atoi(all[i+1]);  // 确保是数字
-        addNode(parent, name, len);
+        for (int i = 2; all[i] != nullptr; i+=2)
+        {
+            char name = all[i][0];     // 确保是字母
+            int len = atoi(all[i+1]);  // 确保是数字
+            addNode(parent, name, len);
+        }
     }
 
     delete copy;
