@@ -134,6 +134,22 @@ void addNode(Node *root, char name, int len)
     }
 }
 
+void freeNodes(Node *root, Node *except)
+{
+    auto node = root->allConnectNodes.begin();
+    while (node != root->allConnectNodes.end())
+    {
+        auto tmp = node->first;
+        if (tmp != except)
+        {
+            freeNodes(tmp, root);
+        }
+        ++node;
+    }
+
+    delete root;
+}
+
 int getAllLen(Node *root, Node *except)
 {
     int len = 0;
@@ -237,5 +253,7 @@ int main(int, char *[])
               << getAllLen(root, nullptr) << std::endl;
     std::cout << "node count: "
               << getNodeCount(root, nullptr) + 1 << std::endl;
+    
+    freeNodes(root, nullptr);
     return 0;
 }
