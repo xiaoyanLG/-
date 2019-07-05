@@ -50,9 +50,9 @@
 #include <cstring>
 
 struct Node {
-    char NodeName;                         // 节点的名字
-    std::map<Node *, int> allConnectNodes; // 联通的节点(节点，到该节点的距离)
-    bool operator <(const Node &other)     // 增加比较函数，使可以使用map
+    char NodeName;                           // 节点的名字
+    std::map<Node *, int> allConnectNodes;   // 联通的节点(节点，到该节点的距离)
+    bool operator <(const Node &other) const // 增加比较函数，使可以使用map
     {
         return this->NodeName < other.NodeName;
     }
