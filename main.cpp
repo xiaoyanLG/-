@@ -222,7 +222,7 @@ void parse(Node **root, const char *line)
         }
     }
 
-    delete copy;
+    free(copy);
 }
 
 int main(int, char *[])
