@@ -45,9 +45,9 @@
     30
 *****************************************************/
 
-#include <map>
 #include <iostream>
-#include <string>
+#include <map>
+#include <cstring>
 
 struct Node {
     char NodeName;                         // 节点的名字
