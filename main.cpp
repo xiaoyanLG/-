@@ -189,15 +189,15 @@ void parse(Node **root, const char *line)
     // 这里没判断传进来的字符串是不是有效的，调用者自己保证
     const char *split = " ";
     char *copy = strdup(line);
-    char *str = strtok(copy, split);
     char *all[27 * 2] = {0};
     char **p = all;
-    while( str != NULL )
+    char *str = strtok(copy, split);
+    while( str != nullptr )
     {
         *p = str;
         ++p;
 
-        str = strtok(NULL,split);
+        str = strtok(nullptr,split);
     }
 
     Node *parent = nullptr;
